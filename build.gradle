@@ -1,0 +1,66 @@
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'idea'
+	id 'distribution'
+	id 'application'
+}
+
+eclipse {
+	classpath {
+		downloadJavadoc = true
+		downloadSources = true
+	}
+}
+
+idea {
+	module {
+		downloadJavadoc = true
+		downloadSources = true
+	}
+}
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+defaultTasks 'clean', 'test', 'build'
+
+project.group = 'guice-spike'
+// This is the name of the module
+ext.moduleName = 'com.tsys.catalog'
+ext.moduleVersion = '1.0'
+ext.jarVersion = '1.0-SNAPSHOT'
+version = jarVersion
+archivesBaseName = moduleName
+// Define the main class for the application
+mainClassName = 'com.tsys.catalog.Runner'
+ext.junit4Version         = '4.12'
+ext.junitVintageVersion   = '5.2.0'
+ext.junitPlatformVersion  = '1.2.0'
+ext.junitJupiterVersion   = '5.2.0'
+ext.log4jVersion          = '2.6.2'
+ext.logbackVersion        = '1.2.3'
+ext.mockitoVersion        = '2.20.0'
+ext.googleGuiceVersion    = '4.0'
+
+dependencies {
+	compile("com.google.inject:guice:${googleGuiceVersion}")
+	compile("org.apache.logging.log4j:log4j-core:${log4jVersion}")
+	
+	// If you also want to support JUnit 3 and JUnit 4 tests
+	testCompileOnly("junit:junit:${junit4Version}")
+	testCompile ("org.mockito:mockito-core:${mockitoVersion}")
+//	testRuntime("org.junit.platform:junit-platform-launcher:${junitPlatformVersion}")
+//	testRuntime("org.junit.vintage:junit-vintage-engine:${junitVintageVersion}")
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts {
+	archives sourcesJar
+}
